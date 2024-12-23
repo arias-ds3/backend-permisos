@@ -7,5 +7,24 @@ routerPermissions.get("/", (req, res) => {
     res.json(permissions)
 })
 
+routerPermissions.post("/", (req, res) => {
+    let text = req.body.text
+    let userId = req.body.userId
+
+    let lastId = permissions[permissions.length-1].id
+
+    permissions.push({ 
+        id: lastId+1,
+         text: "hacer una compra", 
+         approdedBy:[],
+          userId: 1
+        })
+
+        res.json({ id: lastId+1 })
+        // 1 { clave: valor }
+
+})
+
+
 
 module.exports = routerPermissions
