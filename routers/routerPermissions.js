@@ -1,12 +1,37 @@
 const express = require("express");
 const routerPermissions = express.Router();
 
+let authorizers = require("../data/authorazers")
 let permissions = require("../data/permissions")
 let users = require("../data/user")
 
 routerPermissions.get("/", (req, res) => {
     res.json(permissions)
 })
+
+routerPermissions.put("/:id/approvedBy", (req, res) => {
+    let permissionsId = req.params.id
+    let authorizersEmail = req.body.authorizersEmail
+    let authorizersPassword = req.body.authorizersPassword
+
+    // autent
+   let authorizers = authorizers.find(
+     a => a.email == authorizersEmail && a.password == authorizersPassword)
+     if ( authorizers == undefined){
+        return res.status(401).json({ error: "no autorizado"})
+     }
+
+// validac
+let permissions = permissions.find( p => p.id == permissionsId)
+if ( permissions == undefined ){
+    return res.status(400).json({ error: "no permissionsId"})
+}
+permissions.approdedBy.push(authorizers.id)
+
+res.json(permissions)
+
+})
+
 
 routerPermissions.post("/", (req, res) => {
     let text = req.body.text
